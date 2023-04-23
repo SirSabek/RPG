@@ -23,8 +23,7 @@ namespace RPG.Controllers
         [HttpGet("GetAll")]
         public async Task<IActionResult> Get()
         {
-            var userId = int.Parse(User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
-            return Ok(await _characterService.GetAllCharacters(userId));
+            return Ok(await _characterService.GetAllCharacters());
         }
 
         [HttpGet("{id:int}")]
@@ -36,8 +35,8 @@ namespace RPG.Controllers
         [HttpPost]
         public async Task<IActionResult> AddCharacter(AddCharacterDto character)
         {
-            await _characterService.AddCharacter(character);
-            return Ok(character);
+            //await _characterService.AddCharacter(character);
+            return Ok(await _characterService.AddCharacter(character));
         }
 
         [HttpPut]
