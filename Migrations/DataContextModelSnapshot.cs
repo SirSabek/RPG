@@ -83,6 +83,32 @@ namespace RPG.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("RPG.Models.Weapon", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CharacterId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Damage")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CharacterId")
+                        .IsUnique();
+
+                    b.ToTable("Weapons");
+                });
+
             modelBuilder.Entity("RPG.Models.Character", b =>
                 {
                     b.HasOne("RPG.Models.User", "User")
@@ -92,6 +118,23 @@ namespace RPG.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("RPG.Models.Weapon", b =>
+                {
+                    b.HasOne("RPG.Models.Character", "Character")
+                        .WithOne("Weapon")
+                        .HasForeignKey("RPG.Models.Weapon", "CharacterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Character");
+                });
+
+            modelBuilder.Entity("RPG.Models.Character", b =>
+                {
+                    b.Navigation("Weapon")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("RPG.Models.User", b =>
