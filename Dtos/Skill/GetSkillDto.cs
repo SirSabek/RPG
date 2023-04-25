@@ -1,0 +1,7 @@
+﻿namespace RPG.Dtos.Skill;
+
+public class GetSkillDto
+{
+    public string Name { get; set; } = null!;
+    public int Damage { get; set; }
+}
