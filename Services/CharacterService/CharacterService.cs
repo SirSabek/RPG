@@ -31,7 +31,10 @@ namespace RPG.Services.CharacterService
 
         public async Task<ServiceResponse<GetCharacterDto>> GetCharacterById(int id)
         {
-            var character = await _context.Characters.FirstOrDefaultAsync(c => c.Id == id && c.User.Id == GetUserId());
+            var character = await _context.Characters
+                .Include(c=>c.Weapon)
+                .Include(c=>c.CharacterSkills).ThenInclude(cs=>cs.Skill)
+                .FirstOrDefaultAsync(c => c.Id == id && c.User.Id == GetUserId());
 
             var serviceResponse = new ServiceResponse<GetCharacterDto>
             {

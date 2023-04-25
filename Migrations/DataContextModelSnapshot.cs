@@ -32,7 +32,13 @@ namespace RPG.Migrations
                     b.Property<int>("Class")
                         .HasColumnType("int");
 
+                    b.Property<int>("Defeats")
+                        .HasColumnType("int");
+
                     b.Property<int>("Defense")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Fights")
                         .HasColumnType("int");
 
                     b.Property<int>("HitPoints")
@@ -51,11 +57,49 @@ namespace RPG.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
+                    b.Property<int>("Victories")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
 
                     b.ToTable("Characters");
+                });
+
+            modelBuilder.Entity("RPG.Models.CharacterSkill", b =>
+                {
+                    b.Property<int>("CharacterId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SkillId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CharacterId", "SkillId");
+
+                    b.HasIndex("SkillId");
+
+                    b.ToTable("CharacterSkills");
+                });
+
+            modelBuilder.Entity("RPG.Models.Skill", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Damage")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Skills");
                 });
 
             modelBuilder.Entity("RPG.Models.User", b =>
@@ -120,6 +164,25 @@ namespace RPG.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("RPG.Models.CharacterSkill", b =>
+                {
+                    b.HasOne("RPG.Models.Character", "Character")
+                        .WithMany("CharacterSkills")
+                        .HasForeignKey("CharacterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RPG.Models.Skill", "Skill")
+                        .WithMany("CharacterSkills")
+                        .HasForeignKey("SkillId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Character");
+
+                    b.Navigation("Skill");
+                });
+
             modelBuilder.Entity("RPG.Models.Weapon", b =>
                 {
                     b.HasOne("RPG.Models.Character", "Character")
@@ -133,8 +196,15 @@ namespace RPG.Migrations
 
             modelBuilder.Entity("RPG.Models.Character", b =>
                 {
+                    b.Navigation("CharacterSkills");
+
                     b.Navigation("Weapon")
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("RPG.Models.Skill", b =>
+                {
+                    b.Navigation("CharacterSkills");
                 });
 
             modelBuilder.Entity("RPG.Models.User", b =>
